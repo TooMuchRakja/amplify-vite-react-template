@@ -19,7 +19,7 @@ function App() {
   function createTodo() {
     const content = window.prompt("Dodaj swoje zadanie");
     if (content) {
-      client.models.Todo.create({ content, status: "NOT STARTED" });
+      client.models.Todo.create({ content, status: "DO ZROBIENIA" });
     }
   }
   
@@ -39,17 +39,28 @@ function App() {
       <button onClick={createTodo}>+ Nowe zadanie</button>
       <ul>
       {todos.map((todo) => (
-        <li key={todo.id} style={{ display: "flex", flexDirection: "column", marginBottom: "1rem" }}>
+        <li 
+          key={todo.id}
+          className={`todo-item ${
+            todo.status === "DO ZROBIENIA"
+              ? "todo-item-to-do"
+              : todo.status === "W  TRAKCIE"
+              ? "todo-item-in-progress"
+              : todo.status === "ZROBIONE"
+              ? "todo-item-done"
+              : ""
+        }`}
+      >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span>{todo.content}</span>
-            <button onClick={() => deleteTodo(todo.id)}>🗑️</button>
           </div>
           <div>
             <strong>Status:</strong> {todo.status}
           </div>
           <div>
-            <button onClick={() => updateStatus(todo.id, "in progress")}>🔄</button>
-            <button onClick={() => updateStatus(todo.id, "done")}>✅</button>
+            <button onClick={() => updateStatus(todo.id, "W  TRAKCIE")}>🔄</button>
+            <button onClick={() => updateStatus(todo.id, "ZROBIONE")}>✅</button>
+            <button onClick={() => deleteTodo(todo.id)}>🗑️</button>
           </div>
         </li>
       ))}
