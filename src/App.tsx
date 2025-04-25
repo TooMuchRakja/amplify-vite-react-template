@@ -17,27 +17,43 @@ function App() {
   }, []);
 
   function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+    const content = window.prompt("Dodaj swoje zadanie");
+    if (content) {
+      client.models.Todo.create({ content, status: "NOT STARTED" });
+    }
   }
+  
 
   function deleteTodo(id: string) {
     client.models.Todo.delete({ id })
   }
+
+  function updateStatus(id: string, newStatus: string) {
+    client.models.Todo.update({ id, status: newStatus });
+  }
+  
 
   return (
     <main>
       <h1>Twoje dzienne zadania {user?.signInDetails?.loginId}</h1>
       <button onClick={createTodo}>+ Nowe zadanie</button>
       <ul>
-        {todos.map((todo) => (
-     <li key={todo.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-     <span>{todo.content}</span>
-     <button onClick={() => deleteTodo(todo.id)}>🗑️</button>
-   </li>
-   
-      
+      {todos.map((todo) => (
+        <li key={todo.id} style={{ display: "flex", flexDirection: "column", marginBottom: "1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>{todo.content}</span>
+            <button onClick={() => deleteTodo(todo.id)}>🗑️</button>
+          </div>
+          <div>
+            <strong>Status:</strong> {todo.status}
+          </div>
+          <div>
+            <button onClick={() => updateStatus(todo.id, "in progress")}>🔄</button>
+            <button onClick={() => updateStatus(todo.id, "done")}>✅</button>
+          </div>
+        </li>
+      ))}
 
-        ))}
       </ul>
       <div>
         🥳 Aplikacja działa. Baw się polaczku.
